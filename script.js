@@ -2,10 +2,10 @@ var boundx, boundy;
 
 
 function addThumbnail(targetImage, options) {
-	// **
-
+	// local variables
 	var x, x2, y, y2, w, h;
 
+	// the new image, a clone of the real one, with the right dimensions
 	var memoryImg = new Image();
 
 	// default configuration properties
@@ -16,20 +16,24 @@ function addThumbnail(targetImage, options) {
 		selectY2: 600,
 		// 1 square, you can choose 16 / 9 or whatever
 		aspectRatio: 1,
+		sendCoords: '#sendCoords',
 		targetImage: '#target',
 		previewPane: '.jcrop-preview'
 	}
 	
+	// override defaults properties
 	options = $.extend(defaults, options);
 
+	// the main function
 	memoryImg.onload = function() {
-		console.log('ciao');
+		
 		var newWidth = memoryImg.width;
 		var newHeight = memoryImg.height;
 
 		var $target = $(options.targetImage);
 		var cropperContainer =  $target.parent();
 
+		// let jCrop do the heavy stuffs, with the right coordinates
 		$target.Jcrop({
 			aspectRatio : options.aspectRatio,
 			setSelect : [ options.selectX, options.selectY, options.selectX2, options.selectY2  ],
@@ -56,13 +60,10 @@ function addThumbnail(targetImage, options) {
 		});
 	};
 	
+	// setting the src, will invoke the onload function 
 	memoryImg.src = targetImage.src;
-
-
-	$('#sendCoords').off('click').on('click', function() {
-		console.log('x1 :: ' + x,'y1 :: ' + y,'x2 :: ' + x2,'y2 :: ' + y2, 'w :: ' + w, 'h :: ' + h);
-	});
 	
+	// this function update the preview managing the preview coordinates
 	function updatePreview(coords) {
 		// default configuration properties
 		var defaults = {
@@ -85,4 +86,10 @@ function addThumbnail(targetImage, options) {
 			});
 		}
 	}
+
+
+	// write the coordinates in console
+	$(options.sendCoords).off('click').on('click', function() {
+		console.log('x1 :: ' + x,'y1 :: ' + y,'x2 :: ' + x2,'y2 :: ' + y2, 'w :: ' + w, 'h :: ' + h);
+	});
 }
